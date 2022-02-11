@@ -1,24 +1,25 @@
 # Prt
 A small program to easely extract prototypes from .c files.
 
-# Installation
+_Typing this in vim will include every prototypes from srcs/*.c in a .h file, for exemple_
+>:r !prt srcs/*.c
+
+## Installation
 clone this repository:
 ```bash
-git clone [https://github.com/agiraudet/prt]
+git clone https://github.com/agiraudet/prt
 ```
-
 compile:
 ```bash
 cd prt
 make
 ```
-
 create a symoblic link for ease of access
 ```bash
 sudo ln -s $PWD/prt /usr/local/bin
 ```
 
-# Usage
+## Usage
 ```bash
 prt [OPTIONS]... [FILE.C]...
 ```
@@ -30,8 +31,8 @@ prt [OPTIONS]... [FILE.C]...
 |-a|print static fonctions prototype as well|
 |-h|display help and exit|
 
-# Exemple
+## Exemple
 ```bash
-prt -h #display availables options
+prt -h
 prt -sn foo.c
 ```

@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 16:14:08 by agiraude          #+#    #+#             */
-/*   Updated: 2022/02/11 18:37:45 by agiraude         ###   ########.fr       */
+/*   Updated: 2022/02/11 19:09:32 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_error(const char *msg1, const char *msg2)
 
 void	help(char *progname)
 {
-	printf("Usage: %s [OPTION]... [FILE]...\n", progname);
+	printf("Usage: %s [OPTION]... [FILE.c]...\n", progname);
 	printf("Print function's prototype from a '.c' file to standard output.\n");
 	printf("\nThis tool is a work in progress, dont sudo it.\n\n");
 	printf("  -s\tindent with spaces instead of tabs\n");
