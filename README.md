@@ -29,6 +29,7 @@ prt [OPTIONS]... [FILE.C]...
 |-n|add a newline between prototypes of differents files|
 |-f|print filename before protoypes, adding '//' before it|
 |-a|print static fonctions prototype as well|
+|-u|print only function which are defined in a file and called from an other one.
 |-h|display help and exit|
 
 ## Exemple

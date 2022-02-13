@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 15:51:17 by agiraude          #+#    #+#             */
-/*   Updated: 2022/02/11 17:45:23 by agiraude         ###   ########.fr       */
+/*   Updated: 2022/02/12 12:46:33 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,24 +52,24 @@ void	prt_del(void *prt_ptr)
 	free(prt);
 }
 
-void	prt_print(t_prt *prt, t_settings *set)
+void	prt_print(t_prt *prt)
 {
 	int	i;
 
-	if (!set->all && strstr(prt->type, "static") != 0)
+	if (!g_set->all && strstr(prt->type, "static") != 0)
 		return ;
 	printf("%s", prt->type);
 	i = strlen(prt->type);
-	while (i < set->nbspace)
+	while (i < g_set->nbspace)
 	{
-		printf("%c", set->indent);
-		if (set->indent == ' ')
+		printf("%c", g_set->indent);
+		if (g_set->indent == ' ')
 			i++;
-		else if (set->indent == '\t')
-			i += set->tablen;
+		else if (g_set->indent == '\t')
+			i += g_set->tablen;
 	}
-	if (set->indent == '\t' && i <= set->nbspace + 1)
-		printf("%c", set->indent);
+	if (g_set->indent == '\t' && i <= g_set->nbspace + 1)
+		printf("%c", g_set->indent);
 	printf("%s", prt->expr);
 	printf(";\n");
 }

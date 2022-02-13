@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 16:40:57 by agiraude          #+#    #+#             */
-/*   Updated: 2022/02/11 17:46:09 by agiraude         ###   ########.fr       */
+/*   Updated: 2022/02/12 17:46:26 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,15 @@ void	lst_clear(t_lst **list, void (*del)(void *))
 		free(*list);
 		*list = cursor;
 	}
+}
+
+int	lst_have(t_lst *list, void *this)
+{
+	while (list)
+	{
+		if (list->data == this)
+			return (1);
+		list = list->next;
+	}
+	return (0);
 }

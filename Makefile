@@ -6,16 +6,17 @@
 #    By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/06 15:43:27 by agiraude          #+#    #+#              #
-#    Updated: 2022/02/11 18:38:21 by agiraude         ###   ########.fr        #
+#    Updated: 2022/02/12 15:57:06 by agiraude         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 NAME			=	prt
 
 INC_DIR			=	-I includes/ 
 
-SRCS_FILE		=	file.c \
+SRCS_FILE		=	main.c \
+					file.c \
+					call.c \
 					lst.c \
-					main.c \
 					print.c \
 					prt.c \
 					skip.c
@@ -26,7 +27,7 @@ SRCS			=	$(addprefix $(SRCS_DIR), $(SRCS_FILE))
 
 OBJS			=	$(SRCS:.c=.o)
 
-CFLAGS			=	-Wall -Wextra -Werror -g $(INC_DIR) 
+CFLAGS			=	-Wall -Wextra -g $(INC_DIR) 
 
 CC				=	clang
 

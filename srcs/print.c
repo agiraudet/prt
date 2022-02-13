@@ -6,56 +6,65 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 16:15:13 by agiraude          #+#    #+#             */
-/*   Updated: 2022/02/11 17:57:23 by agiraude         ###   ########.fr       */
+/*   Updated: 2022/02/13 11:45:05 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "prt.h"
 
-void	print_count_spaces(t_lst *filelst, t_settings *set)
+void	print_count_spaces(t_lst *filelst)
 {
 	t_lst	*prtlst;
 	int		len;
 
-	set->nbspace = 0;
+	g_set->nbspace = 0;
 	while (filelst)
 	{
 		prtlst = ((t_file_prt *)filelst->data)->prtlst;
 		while (prtlst)
 		{
 			len = strlen(((t_prt *)prtlst->data)->type);
-			if (len > set->nbspace)
-				set->nbspace = len;
+			if (len > g_set->nbspace)
+				g_set->nbspace = len;
 			prtlst = prtlst->next;
 		}
 		filelst = filelst->next;
 	}
-	set->nbspace++;
+	g_set->nbspace++;
 }
 
-void	print_file(t_file_prt *file, t_settings *set)
+void	print_file(t_file_prt *file, t_lst *used)
 {
 	t_lst	*prtlst;
 
 	if (!file || !file->prtlst)
 		return ;
-	if (set->filename)
+	if (g_set->filename)
 		printf("//%s\n", file->name);
 	prtlst = file->prtlst;
 	while (prtlst)
 	{
-		prt_print(prtlst->data, set);
+		if ((g_set->used && lst_have(used, prtlst->data)) || !g_set->used)
+		prt_print(prtlst->data);
 		prtlst = prtlst->next;
 	}
 }
 
-void	print_all(t_lst *filelst, t_settings *set)
+void	print_all(t_lst *filelst)
 {
-	print_count_spaces(filelst, set);
+	t_lst *used;
+
+	used = 0;
+	print_count_spaces(filelst);
+	if (g_set->used)
+	{
+		call_cleanall(filelst);
+		used = call_setused(filelst);
+	}
 	while (filelst)
 	{
-		print_file(filelst->data, set);
-		if (set->skipline && filelst->next)
+		print_file(filelst->data, used);
+		if (g_set->skipline && filelst->next)
 			printf("\n");
 		filelst = filelst->next;
 	}

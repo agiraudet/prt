@@ -6,7 +6,7 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 15:21:51 by agiraude          #+#    #+#             */
-/*   Updated: 2022/02/11 18:15:11 by agiraude         ###   ########.fr       */
+/*   Updated: 2022/02/12 13:36:28 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,42 +30,45 @@ int	file_check(char *pathname)
 	return (1);
 }
 
-void	file_addprt(t_lst **prtlst, char *buf)
+void	file_addprt(t_lst **prtlst, char *buf, int *i)
 {
-	if (!buf[0])
-		return ;
-	lst_add(prtlst, lst_new(prt_new(buf)));
+	buf[*i] = 0;
+	if (buf[0])
+		lst_add(prtlst, lst_new(prt_new(buf)));
+	*i = 0;
+	memset(buf, 0, sizeof (char) * PRT_BUF_SIZE);
 }
 
-t_lst	*file_parse(FILE *f)
+void	file_parse(FILE *f, t_file_prt *fileprt)
 {
 	char	c;
 	int		i;
-	char	buf[500];
-	t_lst	*prtlst;
+	char	buf[PRT_BUF_SIZE];
 
 	i = 0;
 	c = fgetc(f);
-	prtlst = 0;
 	while (c != EOF)
 	{
 		if (c == '/')
-			skip_comment(f);
+			c =skip_comment(f);
 		else if (c == '#')
-			skip_macro(f);
+			c =skip_macro(f);
 		else if (c == '{')
 		{
-			buf[i] = 0;
-			file_addprt(&prtlst, &buf[0]);
-			memset((void *)buf, 0, 500);
-			i = 0;
-			skip_bracket(f);
+			file_addprt(&fileprt->prtlst, buf, &i);
+			c =skip_bracket(f, &fileprt->callst);
 		}
 		else if (c != '\n')
 			buf[i++] = c;
+		if (c == ';')
+		{
+			i = 0;
+			memset(buf, 0, sizeof(char) * PRT_BUF_SIZE);
+		}
+		if (c == EOF)
+			break;
 		c = fgetc(f);
 	}
-	return (prtlst);
 }
 
 void	file_del(void *file_ptr)
@@ -89,13 +92,15 @@ t_file_prt	*file_read(const char *pathname)
 		ft_error("malloc", 0);
 		return (0);
 	}
+	fileprt->prtlst = 0;
+	fileprt->callst = 0;
 	f = fopen(pathname, "r");
 	if (!f)
 	{
 		ft_error(pathname, "failed to open file");
 		return (0);
 	}
-	fileprt->prtlst = file_parse(f);
+	file_parse(f, fileprt);
 	fclose(f);
 	fileprt->name = strdup(pathname);
 	return (fileprt);

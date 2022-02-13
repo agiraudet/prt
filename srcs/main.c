@@ -6,11 +6,13 @@
 /*   By: agiraude <agiraude@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 16:14:08 by agiraude          #+#    #+#             */
-/*   Updated: 2022/02/11 19:09:32 by agiraude         ###   ########.fr       */
+/*   Updated: 2022/02/13 11:50:58 by agiraude         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "prt.h"
+
+t_settings *g_set;
 
 void	ft_error(const char *msg1, const char *msg2)
 {
@@ -33,6 +35,7 @@ void	help(char *progname)
 	printf("  -n\tadd a newline between prototypes of differents files\n");
 	printf("  -f\tprint filename before protoypes, adding '//' before it\n");
 	printf("  -a\tprint static fonctions prototype as well\n");
+	printf("  -u\tprint only functions defined in a file and called from an other one\n");
 	printf("  -h\tdisplay this help and exit\n");
 	printf("\nExamples:\n  %s foo.c", progname);
 	printf("\tOuputs prototypes form foo.c.\n");
@@ -40,26 +43,32 @@ void	help(char *progname)
 	exit(EXIT_SUCCESS);
 }
 
-void	set_settings(int argc, char **argv, t_settings *set)
+void	set_settings(int argc, char **argv)
 {
 	int	opt;
 
-	set->indent = '\t';
-	set->tablen = 4;
-	set->indent = ' ';
-	set->skipline = 0;
-	set->filename = 0;
-	set->all = 0;
-	while ((opt = getopt(argc, argv, "snfah")) != -1)
+	g_set = (t_settings *)malloc(sizeof(t_settings));
+	if (!g_set)
+		exit(EXIT_FAILURE);
+	g_set->indent = '\t';
+	g_set->tablen = 4;
+	g_set->indent = ' ';
+	g_set->skipline = 0;
+	g_set->filename = 0;
+	g_set->all = 0;
+	g_set->used = 0;
+	while ((opt = getopt(argc, argv, "snfahu")) != -1)
 	{
 		if (opt == 's')
-			set->indent = ' ';
+			g_set->indent = ' ';
 		else if (opt == 'n')
-			set->skipline = 1;
+			g_set->skipline = 1;
 		else if (opt == 'f')
-			set->filename = 1;
+			g_set->filename = 1;
 		else if (opt == 'a')
-			set->all = 1;
+			g_set->all = 1;
+		else if (opt == 'u')
+			g_set->used = 1;
 		else if (opt == 'h')
 			help(argv[0]);
 		else
@@ -72,11 +81,10 @@ void	set_settings(int argc, char **argv, t_settings *set)
 
 int	main(int argc, char **argv)
 {
-	t_settings	set;
 	t_lst		*filelst;
 
 	ft_error(argv[0], 0);
-	set_settings(argc, argv, &set);
+	set_settings(argc, argv);
 	if (optind >= argc)
 		exit(EXIT_SUCCESS);
 	filelst = 0;
@@ -86,7 +94,8 @@ int	main(int argc, char **argv)
 			lst_add(&filelst, lst_new(file_read(argv[optind])));
 		optind++;
 	}
-	print_all(filelst, &set);
+	print_all(filelst);
 	lst_clear(&filelst, &file_del);
+
 	exit(EXIT_SUCCESS);
 }
